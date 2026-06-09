@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#7C3A2D" />
+<title>Conto Diviso — หารค่าเที่ยวอิตาลี</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --terracotta:#C56A45;
+    --terracotta-deep:#7C3A2D;
+    --olive:#6B7245;
+    --olive-deep:#4A5230;
+    --cream:#F4EBDD;
+    --cream-card:#FBF6EE;
+    --ink:#2B2118;
+    --muted:#9A8C78;
+    --line:#E4D7C4;
+    --green:#5C7A4A;
+    --green-bg:#EAF0E2;
+    --red:#B0492F;
+    --red-bg:#F6E3DC;
+    --gold:#C99A3F;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    font-family:'Sarabun',sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(197,106,69,.10), transparent 42%),
+      radial-gradient(circle at 88% 96%, rgba(107,114,69,.10), transparent 42%),
+      var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:620px;margin:0 auto;padding:28px 16px calc(56px + env(safe-area-inset-bottom));}
+
+  /* ---------- Header ---------- */
+  header{text-align:center;margin-bottom:26px;}
+  .flag{
+    display:inline-flex;height:6px;width:78px;border-radius:6px;overflow:hidden;
+    margin-bottom:14px;box-shadow:0 2px 6px rgba(0,0,0,.12);
+  }
+  .flag i{flex:1;}
+  .flag .g{background:#4A5230;} .flag .w{background:#FBF6EE;} .flag .r{background:#B0492F;}
+  h1{
+    font-family:'Fraunces',serif;font-weight:600;font-size:34px;margin:0;
+    letter-spacing:-.5px;color:var(--terracotta-deep);line-height:1.05;
+  }
+  h1 em{font-style:italic;color:var(--olive-deep);}
+  .subtitle{margin:6px 0 0;color:var(--muted);font-size:14px;font-weight:500;}
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--cream-card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:20px 18px;
+    margin-bottom:16px;
+    box-shadow:0 6px 22px rgba(124,58,45,.07);
+  }
+  .label{
+    display:flex;align-items:center;gap:8px;
+    margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--terracotta);
+  }
+  .label .num{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:500;
+    font-size:15px;color:var(--olive);letter-spacing:0;
+  }
+
+  /* ---------- People ---------- */
+  .people{display:flex;flex-direction:column;gap:10px;}
+  .person-row{display:flex;align-items:center;gap:10px;}
+  .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,0,0,.04);}
+  .person-input{
+    flex:1;border:1px solid var(--line);background:#fff;border-radius:11px;
+    padding:11px 14px;font-size:15px;font-family:inherit;outline:none;color:var(--ink);
+    transition:border-color .15s;
+  }
+  .person-input:focus{border-color:var(--terracotta);}
+  .icon-btn{
+    border:none;background:transparent;color:var(--muted);cursor:pointer;
+    width:32px;height:32px;border-radius:9px;font-size:18px;line-height:1;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;
+  }
+  .icon-btn:hover{background:var(--red-bg);color:var(--red);}
+  .add-person{
+    margin-top:4px;align-self:flex-start;border:none;background:transparent;
+    color:var(--olive);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
+    padding:6px 2px;
+  }
+  .add-person:hover{text-decoration:underline;}
+
+  /* ---------- Expense item ---------- */
+  .exp{
+    border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;
+    background:#fff;position:relative;
+  }
+  .exp-top{display:flex;gap:10px;margin-bottom:12px;}
+  .exp-desc{
+    flex:2;border:none;border-bottom:1.5px solid var(--line);background:transparent;
+    font-size:15px;font-family:inherit;padding:6px 2px;outline:none;color:var(--ink);
+  }
+  .exp-desc:focus{border-color:var(--terracotta);}
+  .amount-wrap{flex:1;display:flex;align-items:center;border-bottom:1.5px solid var(--line);}
+  .amount-wrap:focus-within{border-color:var(--terracotta);}
+  .cur{font-family:'Fraunces',serif;color:var(--muted);font-size:16px;padding-right:4px;}
+  .exp-amount{
+    width:100%;border:none;background:transparent;font-size:16px;font-family:'Fraunces',serif;
+    font-weight:600;text-align:right;padding:6px 0;outline:none;color:var(--ink);
+  }
+  .exp-meta{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--muted);
+    text-transform:uppercase;margin:0 0 6px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .chip{
+    border:1.5px solid var(--line);background:#fff;border-radius:20px;
+    padding:5px 12px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;
+    color:var(--muted);transition:all .14s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip .cdot{width:8px;height:8px;border-radius:50%;}
+  .chip.on-pay{border-color:transparent;color:#fff;}
+  .chip.on-split{border-color:currentColor;background:rgba(0,0,0,.02);}
+  .remove-exp{
+    position:absolute;top:10px;right:10px;border:none;background:var(--red-bg);
+    color:var(--red);width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:15px;
+    line-height:1;display:flex;align-items:center;justify-content:center;
+  }
+  .add-exp{
+    width:100%;padding:13px;border:1.5px dashed var(--terracotta);border-radius:13px;
+    background:transparent;color:var(--terracotta);font-family:inherit;font-size:15px;
+    font-weight:600;cursor:pointer;transition:background .15s;
+  }
+  .add-exp:hover{background:rgba(197,106,69,.06);}
+
+  /* ---------- Summary ---------- */
+  .total{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:4px 2px 16px;
+  }
+  .total .k{color:var(--muted);font-size:14px;font-weight:600;}
+  .total .v{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:var(--terracotta-deep);}
+  .bal-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .bal{
+    display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;
+    background:#fff;border:1px solid var(--line);font-size:14px;
+  }
+  .bal .name{font-weight:700;flex:1;display:flex;align-items:center;gap:8px;}
+  .bal .tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:8px;}
+  .tag.up{background:var(--green-bg);color:var(--green);}
+  .tag.down{background:var(--red-bg);color:var(--red);}
+  .tag.even{background:#EFE8DA;color:var(--muted);}
+  .settle-title{
+    font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--olive-deep);
+    margin:0 0 10px;
+  }
+  .settle{
+    display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:13px;
+    background:linear-gradient(135deg,rgba(197,106,69,.10),rgba(107,114,69,.10));
+    border:1px solid var(--line);margin-bottom:8px;font-size:15px;
+  }
+  .settle .arrow{font-family:'Fraunces',serif;color:var(--terracotta);}
+  .settle .amt{font-family:'Fraunces',serif;font-weight:700;font-size:18px;margin-left:auto;
+    color:var(--terracotta-deep);white-space:nowrap;}
+  .all-even{
+    text-align:center;padding:18px;border-radius:13px;background:var(--green-bg);
+    color:var(--green);font-weight:600;font-size:15px;
+  }
+  .empty{text-align:center;color:var(--muted);padding:14px 0;font-size:14px;}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px;}
+  .tool{
+    border:1px solid var(--line);background:var(--cream-card);border-radius:10px;
+    padding:8px 14px;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);
+    cursor:pointer;transition:all .15s;
+  }
+  .tool:hover{border-color:var(--terracotta);color:var(--terracotta);}
+  .tool.danger:hover{border-color:var(--red);color:var(--red);}
+  .cur-toggle{display:flex;gap:6px;}
+  .cur-toggle .tool.active{background:var(--terracotta);color:#fff;border-color:var(--terracotta);}
+  .footer-note{text-align:center;color:var(--muted);font-size:12px;margin-top:18px;
+    font-family:'Fraunces',serif;font-style:italic;}
+  @media(max-width:420px){
+    h1{font-size:28px;}
+    .total .v{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+<div id="root" class="page"></div>
+
+<script type="module">
+const PALETTE = ["#C56A45","#6B7245","#C99A3F","#7C8AA6","#A0566B","#4A8C7A","#8C6A4A","#B05050"];
+const CUR = { THB:{sym:"฿",loc:"th-TH"}, EUR:{sym:"€",loc:"de-DE"} };
+const STORE_KEY = "conto_diviso_v1";
+
+const blankExpense = (people) => ({
+  id: crypto.randomUUID(),
+  desc:"", amount:"", paidBy:0,
+  splitWith: people.map((_,i)=>i),
+});
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ const d = JSON.parse(raw); if(d.people && d.expenses) return d; }
+  }catch(e){}
+  return null;
+}
+
+const saved = load();
+let state = saved || {
+  currency:"EUR",
+  people:["",""],
+  expenses:[blankExpense(["",""])],
+};
+
+function persist(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+const $ = (id)=>document.getElementById(id);
+const fmt = (n)=> n.toLocaleString(CUR[state.currency].loc,{minimumFractionDigits:2,maximumFractionDigits:2});
+const sym = ()=> CUR[state.currency].sym;
+const nameOf = (i)=> (state.people[i]||"").trim() || `คนที่ ${i+1}`;
+const colorOf = (i)=> PALETTE[i % PALETTE.length];
+
+/* ---------- mutations ---------- */
+function setState(fn){ fn(); persist(); render(); }
+
+function addPerson(){
+  setState(()=>{
+    state.people.push("");
+    // include new person in nothing automatically except keep existing splits valid
+  });
+}
+function removePerson(idx){
+  if(state.people.length<=2) return;
+  setState(()=>{
+    state.people.splice(idx,1);
+    state.expenses.forEach(e=>{
+      if(e.paidBy===idx) e.paidBy=0;
+      else if(e.paidBy>idx) e.paidBy--;
+      e.splitWith = e.splitWith
+        .filter(p=>p!==idx)
+        .map(p=>p>idx?p-1:p);
+      if(e.splitWith.length===0) e.splitWith=[0];
+    });
+  });
+}
+function addExpense(){ setState(()=>{ state.expenses.push(blankExpense(state.people)); }); }
+function removeExpense(id){ setState(()=>{ state.expenses = state.expenses.filter(e=>e.id!==id); }); }
+function updateExpense(id,field,val){ setState(()=>{ const e=state.expenses.find(x=>x.id===id); if(e) e[field]=val; }); }
+function setPaidBy(id,p){ setState(()=>{ const e=state.expenses.find(x=>x.id===id); if(e) e.paidBy=p; }); }
+function toggleSplit(id,p){
+  setState(()=>{
+    const e=state.expenses.find(x=>x.id===id); if(!e)return;
+    const has=e.splitWith.includes(p);
+    if(has && e.splitWith.length===1) return;
+    e.splitWith = has ? e.splitWith.filter(x=>x!==p) : [...e.splitWith,p].sort((a,b)=>a-b);
+  });
+}
+function setCurrency(c){ setState(()=>{ state.currency=c; }); }
+
+/* ---------- compute settlements (minimize transfers) ---------- */
+function compute(){
+  const n=state.people.length;
+  const paid=Array(n).fill(0), owe=Array(n).fill(0);
+  let total=0;
+  for(const e of state.expenses){
+    const amt=parseFloat(e.amount)||0;
+    if(amt<=0||e.splitWith.length===0) continue;
+    total+=amt;
+    paid[e.paidBy]+=amt;
+    const share=amt/e.splitWith.length;
+    e.splitWith.forEach(i=>owe[i]+=share);
+  }
+  const bal=paid.map((p,i)=>+(p-owe[i]).toFixed(2)); // +ve = should receive
+  // greedy settle
+  const cred=[],deb=[];
+  bal.forEach((b,i)=>{ if(b>0.009)cred.push({i,v:b}); else if(b<-0.009)deb.push({i,v:-b}); });
+  cred.sort((a,b)=>b.v-a.v); deb.sort((a,b)=>b.v-a.v);
+  const transfers=[];
+  let ci=0,di=0;
+  while(ci<cred.length && di<deb.length){
+    const c=cred[ci],d=deb[di];
+    const amt=Math.min(c.v,d.v);
+    transfers.push({from:d.i,to:c.i,amount:+amt.toFixed(2)});
+    c.v-=amt; d.v-=amt;
+    if(c.v<0.009)ci++; if(d.v<0.009)di++;
+  }
+  return {paid,owe,bal,total,transfers};
+}
+
+/* ---------- import / export ---------- */
+function exportData(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="conto-diviso.json"; a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(){
+  const inp=document.createElement("input");
+  inp.type="file"; inp.accept="application/json";
+  inp.onchange=()=>{
+    const f=inp.files[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{ try{ const d=JSON.parse(r.result);
+      if(d.people&&d.expenses){ state=d; persist(); render(); } else alert("ไฟล์ไม่ถูกต้อง");
+    }catch{ alert("อ่านไฟล์ไม่ได้"); } };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+function resetAll(){
+  if(!confirm("ล้างข้อมูลทั้งหมด? การกระทำนี้ย้อนกลับไม่ได้")) return;
+  state={currency:state.currency,people:["",""],expenses:[blankExpense(["",""])]};
+  persist(); render();
+}
+
+/* ---------- render ---------- */
+function render(){
+  const r=compute();
+  const root=$("root");
+
+  root.innerHTML = `
+  <header>
+    <span class="flag"><i class="g"></i><i class="w"></i><i class="r"></i></span>
+    <h1>Conto <em>Diviso</em></h1>
+    <p class="subtitle">หารค่าทริปอิตาลีให้ลงตัว — บันทึกอัตโนมัติในเครื่อง</p>
+  </header>
+
+  <section class="card">
+    <p class="label"><span class="num">I.</span> ผู้ร่วมเดินทาง</p>
+    <div class="people">
+      ${state.people.map((p,i)=>`
+        <div class="person-row">
+          <span class="dot" style="background:${colorOf(i)}"></span>
+          <input class="person-input" data-pi="${i}" placeholder="${`คนที่ ${i+1}`}" value="${escapeHtml(p)}" />
+          ${state.people.length>2?`<button class="icon-btn" data-rmperson="${i}" title="ลบ">×</button>`:``}
+        </div>`).join("")}
+    </div>
+    <button class="add-person" id="addPerson">+ เพิ่มคน</button>
+  </section>
+
+  <section class="card">
+    <p class="label"><span class="num">II.</span> รายการค่าใช้จ่าย</p>
+    ${state.expenses.map(e=>renderExpense(e)).join("")}
+    <button class="add-exp" id="addExp">+ เพิ่มรายการ</button>
+  </section>
+
+  <section class="card">
+    <p class="label"><span class="num">III.</span> สรุปยอด</p>
+    <div class="total"><span class="k">ยอดรวมทั้งทริป</span><span class="v">${sym()}${fmt(r.total)}</span></div>
+    <div class="bal-list">
+      ${state.people.map((_,i)=>{
+        const b=r.bal[i];
+        const cls = b>0.009?"up":(b<-0.009?"down":"even");
+        const txt = b>0.009?`ได้คืน ${sym()}${fmt(b)}`:(b<-0.009?`จ่ายเกิน ${sym()}${fmt(-b)}`:"เท่าทุน");
+        return `<div class="bal">
+          <span class="name"><span class="dot" style="background:${colorOf(i)}"></span>${escapeHtml(nameOf(i))}</span>
+          <span class="tag ${cls}">${txt}</span>
+        </div>`;
+      }).join("")}
+    </div>
+    <div id="settleHost">
+    ${ r.total>0 ? (r.transfers.length ? `
+      <p class="settle-title">ใครโอนให้ใคร</p>
+      ${r.transfers.map(t=>`
+        <div class="settle">
+          <span class="dot" style="background:${colorOf(t.from)}"></span>
+          <strong>${escapeHtml(nameOf(t.from))}</strong>
+          <span class="arrow">→</span>
+          <span class="dot" style="background:${colorOf(t.to)}"></span>
+          <strong>${escapeHtml(nameOf(t.to))}</strong>
+          <span class="amt">${sym()}${fmt(t.amount)}</span>
+        </div>`).join("")}
+    ` : `<div class="all-even">✓ ทุกคนจ่ายเท่ากันพอดี ไม่ต้องโอน</div>`)
+    : `<div class="empty">ยังไม่มียอด — เพิ่มรายการด้านบนได้เลย</div>` }
+    </div>
+  </section>
+
+  <section class="card">
+    <p class="label"><span class="num">IV.</span> สกุลเงิน & ข้อมูล</p>
+    <div class="toolbar" style="margin-bottom:12px">
+      <div class="cur-toggle">
+        <button class="tool ${state.currency==="EUR"?"active":""}" data-cur="EUR">€ EUR</button>
+        <button class="tool ${state.currency==="THB"?"active":""}" data-cur="THB">฿ THB</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="tool" id="exportBtn">↓ Export</button>
+      <button class="tool" id="importBtn">↑ Import</button>
+      <button class="tool danger" id="resetBtn">ล้างข้อมูล</button>
+    </div>
+  </section>
+
+  <p class="footer-note">Buon viaggio — เที่ยวให้สนุกนะ</p>
+  `;
+
+  bind();
+}
+
+function renderExpense(e){
+  const chipsPay = state.people.map((_,i)=>{
+    const on=e.paidBy===i;
+    return `<button class="chip ${on?"on-pay":""}" style="${on?`background:${colorOf(i)}`:""}" data-pay="${e.id}|${i}">
+      ${on?"":`<span class="cdot" style="background:${colorOf(i)}"></span>`}${escapeHtml(nameOf(i))}
+    </button>`;
+  }).join("");
+  const chipsSplit = state.people.map((_,i)=>{
+    const on=e.splitWith.includes(i);
+    return `<button class="chip ${on?"on-split":""}" style="${on?`color:${colorOf(i)}`:""}" data-split="${e.id}|${i}">
+      <span class="cdot" style="background:${on?colorOf(i):"#ccc"}"></span>${escapeHtml(nameOf(i))}
+    </button>`;
+  }).join("");
+  return `
+  <div class="exp">
+    ${state.expenses.length>1?`<button class="remove-exp" data-rmexp="${e.id}" title="ลบ">×</button>`:``}
+    <div class="exp-top">
+      <input class="exp-desc" data-desc="${e.id}" placeholder="เช่น ค่าอาหาร, ค่ารถไฟ" value="${escapeHtml(e.desc)}" />
+      <span class="amount-wrap"><span class="cur">${sym()}</span>
+        <input class="exp-amount" data-amount="${e.id}" type="number" inputmode="decimal" placeholder="0" value="${escapeHtml(e.amount)}" /></span>
+    </div>
+    <p class="exp-meta">ใครจ่าย</p>
+    <div class="chips">${chipsPay}</div>
+    <p class="exp-meta">หารกับใคร</p>
+    <div class="chips">${chipsSplit}</div>
+  </div>`;
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- event binding (preserve focus) ---------- */
+function bind(){
+  // people names — update without full re-render to keep typing smooth
+  document.querySelectorAll("[data-pi]").forEach(inp=>{
+    inp.addEventListener("input",ev=>{
+      const i=+ev.target.dataset.pi;
+      state.people[i]=ev.target.value; persist();
+      // light update of names elsewhere without losing focus
+      refreshNames();
+    });
+  });
+  document.querySelectorAll("[data-rmperson]").forEach(b=>b.addEventListener("click",()=>removePerson(+b.dataset.rmperson)));
+  $("addPerson").addEventListener("click",addPerson);
+
+  document.querySelectorAll("[data-desc]").forEach(inp=>{
+    inp.addEventListener("input",ev=>{ const id=ev.target.dataset.desc;
+      const e=state.expenses.find(x=>x.id===id); if(e){e.desc=ev.target.value; persist();} });
+  });
+  document.querySelectorAll("[data-amount]").forEach(inp=>{
+    inp.addEventListener("input",ev=>{ const id=ev.target.dataset.amount;
+      const e=state.expenses.find(x=>x.id===id); if(e){e.amount=ev.target.value; persist(); refreshSummary();} });
+  });
+  document.querySelectorAll("[data-pay]").forEach(b=>b.addEventListener("click",()=>{const[id,i]=b.dataset.pay.split("|");setPaidBy(id,+i);}));
+  document.querySelectorAll("[data-split]").forEach(b=>b.addEventListener("click",()=>{const[id,i]=b.dataset.split.split("|");toggleSplit(id,+i);}));
+  document.querySelectorAll("[data-rmexp]").forEach(b=>b.addEventListener("click",()=>removeExpense(b.dataset.rmexp)));
+  $("addExp").addEventListener("click",addExpense);
+
+  document.querySelectorAll("[data-cur]").forEach(b=>b.addEventListener("click",()=>setCurrency(b.dataset.cur)));
+  $("exportBtn").addEventListener("click",exportData);
+  $("importBtn").addEventListener("click",importData);
+  $("resetBtn").addEventListener("click",resetAll);
+}
+
+// Live refreshers that update the summary WITHOUT re-rendering inputs (keeps keyboard/focus on mobile)
+function refreshNames(){ refreshSummary(); }
+function refreshSummary(){
+  const r=compute();
+  const totalEl=document.querySelector(".total .v");
+  if(totalEl) totalEl.textContent=`${sym()}${fmt(r.total)}`;
+
+  const list=document.querySelector(".bal-list");
+  if(list){
+    list.innerHTML = state.people.map((_,i)=>{
+      const b=r.bal[i];
+      const cls=b>0.009?"up":(b<-0.009?"down":"even");
+      const txt=b>0.009?`ได้คืน ${sym()}${fmt(b)}`:(b<-0.009?`จ่ายเกิน ${sym()}${fmt(-b)}`:"เท่าทุน");
+      return `<div class="bal"><span class="name"><span class="dot" style="background:${colorOf(i)}"></span>${escapeHtml(nameOf(i))}</span><span class="tag ${cls}">${txt}</span></div>`;
+    }).join("");
+  }
+  const settleHost=document.getElementById("settleHost");
+  if(settleHost){
+    settleHost.innerHTML = r.total>0 ? (r.transfers.length ? `
+      <p class="settle-title">ใครโอนให้ใคร</p>
+      ${r.transfers.map(t=>`<div class="settle"><span class="dot" style="background:${colorOf(t.from)}"></span><strong>${escapeHtml(nameOf(t.from))}</strong><span class="arrow">→</span><span class="dot" style="background:${colorOf(t.to)}"></span><strong>${escapeHtml(nameOf(t.to))}</strong><span class="amt">${sym()}${fmt(t.amount)}</span></div>`).join("")}
+    ` : `<div class="all-even">✓ ทุกคนจ่ายเท่ากันพอดี ไม่ต้องโอน</div>`)
+    : `<div class="empty">ยังไม่มียอด — เพิ่มรายการด้านบนได้เลย</div>`;
+  }
+}
+
+render();
+</script>
+</body>
+</html>
